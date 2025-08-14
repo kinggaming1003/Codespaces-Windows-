@@ -16,7 +16,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Docker Compose
+    - name: Set up QEMU for virtualization
       uses: docker/setup-qemu-action@v3
     
     - name: Ensure KVM is available (Optional)
@@ -26,20 +26,23 @@ jobs:
         ls -la /dev/kvm
 
     - name: Start the Windows VM container
+      # FIX: Changed 'docker-compose' to 'docker compose'
       run: |
-        docker-compose up --build -d
+        docker compose up --build -d
         echo "Docker Compose started in detached mode."
     
     - name: Wait for the container to initialize
       run: sleep 60
       
     - name: Check container status
+      # FIX: Changed 'docker-compose' to 'docker compose'
       run: |
-        docker ps
+        docker compose ps
         docker logs windows
 
     - name: Stop and remove the container
+      # FIX: Changed 'docker-compose' to 'docker compose'
       run: |
-        docker-compose down
+        docker compose down
         echo "Docker Compose services stopped and removed."
-
+        
