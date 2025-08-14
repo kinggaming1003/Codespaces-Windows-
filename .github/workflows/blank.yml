@@ -1,23 +1,45 @@
-nano windows10.yml
-services:
-  windows:
-    image: dockurr/windows
-    container_name: windows
-    environment:
-      VERSION: "10"
-      USERNAME: "SOURAV SEC"
-      PASSWORD: "admin@123"
-      RAM_SIZE: "4G"
-      CPU_CORES: "4"
-      DISK_SIZE: "400G"
-      DISK2_SIZE: "100G"
-    devices:
-/dev/kvm
-/dev/net/tun
-    cap_add:
-NET_ADMIN
-    ports:
-"8006:8006"
-"3389:3389/tcp"
-"3389:3389/udp"
-    stop_grace_period: 2m
+name: Test Windows VM Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-vm:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Compose
+      uses: docker/setup-qemu-action@v3
+    
+    - name: Ensure KVM is available (Optional)
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y qemu-kvm
+        ls -la /dev/kvm
+
+    - name: Start the Windows VM container
+      run: |
+        docker-compose up --build -d
+        echo "Docker Compose started in detached mode."
+    
+    - name: Wait for the container to initialize
+      run: sleep 60
+      
+    - name: Check container status
+      run: |
+        docker ps
+        docker logs windows
+
+    - name: Stop and remove the container
+      run: |
+        docker-compose down
+        echo "Docker Compose services stopped and removed."
+
