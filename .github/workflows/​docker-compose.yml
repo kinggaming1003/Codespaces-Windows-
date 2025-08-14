@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows
+    environment:
+      VERSION: "ltsc"
+      USERNAME: "MASTER"
+      PASSWORD: "admin@123"
+      RAM_SIZE: "2G"
+      CPU_CORES: "2"
+      DISK_SIZE: "25G"
+      DISK2_SIZE: "0G"
+    # The 'devices' section is removed because it is not supported in
+    # the GitHub Actions environment.
+    cap_add:
+      - NET_ADMIN
+    stop_grace_period: 2m
