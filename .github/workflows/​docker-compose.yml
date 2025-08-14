@@ -9,10 +9,8 @@ services:
       PASSWORD: "admin@123"
       RAM_SIZE: "2G"
       CPU_CORES: "2"
-      DISK_SIZE: "25G"
-      DISK2_SIZE: "0G"
-    # The 'devices' section is removed because it is not supported in
-    # the GitHub Actions environment.
+      # FIX: Drastically reduced disk size to fit within the runner's storage.
+      DISK_SIZE: "10G"
     cap_add:
       - NET_ADMIN
     stop_grace_period: 2m
